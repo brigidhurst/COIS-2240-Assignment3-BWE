@@ -1,6 +1,11 @@
 import java.util.List;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class RentalSystem {
     private List<Vehicle> vehicles = new ArrayList<>();
@@ -9,6 +14,7 @@ public class RentalSystem {
 
     public void addVehicle(Vehicle vehicle) {
         vehicles.add(vehicle);
+        saveVehicle(vehicle);
     }
 
     public void addCustomer(Customer customer) {
@@ -120,5 +126,67 @@ public class RentalSystem {
             if (c.getCustomerId() == id)
                 return c;
         return null;
+    }
+    public void saveVehicle(Vehicle vehicle) {
+    	try {
+			String vehicleType;
+			int i =-1;
+			ArrayList<String> previousData = new ArrayList<>(); 
+			BufferedReader reader = new BufferedReader(new FileReader("vehicles.txt"));
+			do {
+				i++;
+				previousData.add(reader.readLine());
+			}while(previousData.get(i) != null);
+			previousData.remove(null);
+			i = 0;
+			BufferedWriter writer = new BufferedWriter(new FileWriter("vehicles.txt"));	
+            if (vehicle instanceof Car) {
+                vehicleType = "Car";
+            } else if (vehicle instanceof Minibus) {
+                vehicleType = "Minibus";
+            } else if (vehicle instanceof PickupTruck) {
+                vehicleType = "Pickup Truck";
+            } else {
+                vehicleType = "Unknown";
+                System.out.println("error:unable to get vehicle type when saving vehicle to file: vehicle type dose not exist or is not reconsised");
+            }
+            if(vehicleType.equals("Unknown")){
+            	System.out.println("vehicle skiped");
+            	
+            	for(String line: previousData) {
+            		if(i == 0) {
+            			writer.write(line);
+            		}
+            		else {
+            			writer.write("\n"+line);
+            		}
+            		i++;
+            	}
+            }
+            else {
+            	previousData.add(vehicleType+" "+vehicle.getInfo());
+            	for(String line: previousData) {
+            		if(i == 0) {
+            			writer.write(line);
+            		}
+            		else {
+            			writer.write("\n"+line);
+            		}
+            		i++;
+            	}
+				writer.close();
+				reader.close();
+            }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    public void saveCustomer(Customer customer) {
+    	try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter("customers.txt"));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
 }
