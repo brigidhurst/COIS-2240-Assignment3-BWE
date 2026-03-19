@@ -36,7 +36,10 @@ public class VehicleRentalApp {
                     scanner.nextLine();
 
                     Vehicle vehicle;
-                    if (type == 1) {
+                    if (rentalSystem.findVehicleByPlate(plate) != null) {
+                    	vehicle = null;
+                    }
+                    else if (type == 1) {
                         System.out.print("Enter number of seats: ");
                         int seats = scanner.nextInt();
                         vehicle = new Car(make, model, year, seats);
