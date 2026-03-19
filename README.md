@@ -9,6 +9,7 @@
 - 2.2
 ## Will: 
 - 1.1 (DONE)
-- 1.4 (MOSTLY DONE)
+- 1.4 (DONE)
   - on fail still says "x added successfully" before failure message
+  - fix by adding checking in APP for same plates before asigning and outputing sucsess message
 - 2.3
