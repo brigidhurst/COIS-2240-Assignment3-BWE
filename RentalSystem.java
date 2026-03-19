@@ -17,8 +17,15 @@ public class RentalSystem {
     	return instance;
     }
 
-    public void addVehicle(Vehicle vehicle) {
-        vehicles.add(vehicle);
+    public boolean addVehicle(Vehicle vehicle) {
+    	if (findVehicleByPlate(vehicle.getLicensePlate()) == null) {
+    		vehicles.add(vehicle);
+    		return true;
+    	}
+    	else {
+	    	System.out.println("Vehicle with this licence plate already in system.");
+	    	return false;
+    	}
     }
 
     public void addCustomer(Customer customer) {
