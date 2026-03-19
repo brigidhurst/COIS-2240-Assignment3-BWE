@@ -28,8 +28,15 @@ public class RentalSystem {
     	}
     }
 
-    public void addCustomer(Customer customer) {
-        customers.add(customer);
+    public boolean addCustomer(Customer customer) {
+    	if (findCustomerById(customer.getCustomerId()) == null) {
+    		customers.add(customer);
+    		return true;
+    	}
+    	else {
+	    	System.out.println("Customer with this ID already in system.");
+	    	return false;
+    	}
     }
 
     public void rentVehicle(Vehicle vehicle, Customer customer, LocalDate date, double amount) {
