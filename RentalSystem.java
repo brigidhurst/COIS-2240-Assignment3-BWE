@@ -1,6 +1,11 @@
 import java.util.List;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class RentalSystem {
     private List<Vehicle> vehicles = new ArrayList<>();
@@ -20,6 +25,7 @@ public class RentalSystem {
     public boolean addVehicle(Vehicle vehicle) {
     	if (findVehicleByPlate(vehicle.getLicensePlate()) == null) {
     		vehicles.add(vehicle);
+    		saveVehicle(vehicle);
     		return true;
     	}
     	else {
@@ -31,6 +37,7 @@ public class RentalSystem {
     public boolean addCustomer(Customer customer) {
     	if (findCustomerById(customer.getCustomerId()) == null) {
     		customers.add(customer);
+    		saveCustomer(customer);
     		return true;
     	}
     	else {
@@ -44,6 +51,7 @@ public class RentalSystem {
             vehicle.setStatus(Vehicle.VehicleStatus.Rented);
             rentalHistory.addRecord(new RentalRecord(vehicle, customer, date, amount, "RENT"));
             System.out.println("Vehicle rented to " + customer.getCustomerName());
+            saveRecord(new RentalRecord(vehicle, customer, date, amount, "RENT"));
         }
         else {
             System.out.println("Vehicle is not available for renting.");
@@ -55,6 +63,7 @@ public class RentalSystem {
             vehicle.setStatus(Vehicle.VehicleStatus.Available);
             rentalHistory.addRecord(new RentalRecord(vehicle, customer, date, extraFees, "RETURN"));
             System.out.println("Vehicle returned by " + customer.getCustomerName());
+            saveRecord(new RentalRecord(vehicle, customer, date, extraFees, "RETURN"));
         }
         else {
             System.out.println("Vehicle is not rented.");
@@ -144,5 +153,73 @@ public class RentalSystem {
             if (c.getCustomerId() == id)
                 return c;
         return null;
+    }
+    public void saveVehicle(Vehicle vehicle) {
+    	try {
+			String vehicleType;
+			
+			BufferedWriter writer = new BufferedWriter(new FileWriter("vehicles.txt", true));
+			BufferedReader reader = new BufferedReader(new FileReader("vehicles.txt"));
+            if (vehicle instanceof Car) {
+                vehicleType = "Car";
+            } else if (vehicle instanceof Minibus) {
+                vehicleType = "Minibus";
+            } else if (vehicle instanceof PickupTruck) {
+                vehicleType = "Pickup Truck";
+            } else {
+                vehicleType = "Unknown";
+                System.out.println("error: unable to get vehicle type when saving vehicle to file: vehicle type dose not exist or is not reconsised");
+            }
+            if(vehicleType.equals("Unknown")){
+            	System.out.println("vehicle skiped");
+            }
+            else {
+            	if(reader.readLine() == null) {
+            		writer.write(vehicleType+" "+vehicle.getInfo());
+            	}
+            	else {
+            		writer.write("\n"+vehicleType+" "+vehicle.getInfo());	
+            	}
+            }
+			writer.close();
+			reader.close();
+            
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    public void saveCustomer(Customer customer) {
+    	try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter("customers.txt", true));
+			BufferedReader reader = new BufferedReader(new FileReader("customers.txt"));
+			if(reader.readLine() == null) {
+        		writer.write(customer.toString());
+        	}
+        	else {
+        		writer.write("\n"+customer.toString());	
+        	}
+			writer.close();
+			reader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    public void saveRecord(RentalRecord record) {
+    	try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter("rental_records.txt", true));
+			BufferedReader reader = new BufferedReader(new FileReader("rental_records.txt"));
+			if(reader.readLine() == null) {
+        		writer.write(record.toString());
+        	}
+        	else {
+        		writer.write("\n"+record.toString());	
+        	}
+			writer.close();
+			reader.close();
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
     }
 }

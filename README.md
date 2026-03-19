@@ -1,6 +1,6 @@
 # TODO
 ## Eric: 
-- 1.2
+- 1.2 (DONE)
 - 1.3
 - 2.1
 ## Brigid: 
