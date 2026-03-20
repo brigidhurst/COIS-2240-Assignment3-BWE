@@ -2,6 +2,7 @@ import java.util.List;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.FileWriter;
@@ -19,6 +20,7 @@ public class RentalSystem {
     public static RentalSystem getInstance() {
     	if (instance == null)
     		instance = new RentalSystem();
+    		loadData();
     	return instance;
     }
 
@@ -154,6 +156,12 @@ public class RentalSystem {
                 return c;
         return null;
     }
+    public Customer findCustomerByName(String name) {
+        for (Customer c : customers)
+            if (c.getCustomerName().equals(name))
+                return c;
+        return null;
+    }
     public void saveVehicle(Vehicle vehicle) {
     	try {
 			String vehicleType;
@@ -175,10 +183,10 @@ public class RentalSystem {
             }
             else {
             	if(reader.readLine() == null) {
-            		writer.write(vehicleType+" "+vehicle.getInfo());
+            		writer.write(vehicleType+" "+vehicle.getInfo()); //write to file first line
             	}
             	else {
-            		writer.write("\n"+vehicleType+" "+vehicle.getInfo());	
+            		writer.write("\n"+vehicleType+" "+vehicle.getInfo()); //write to file
             	}
             }
 			writer.close();
@@ -193,10 +201,10 @@ public class RentalSystem {
 			BufferedWriter writer = new BufferedWriter(new FileWriter("customers.txt", true));
 			BufferedReader reader = new BufferedReader(new FileReader("customers.txt"));
 			if(reader.readLine() == null) {
-        		writer.write(customer.toString());
+        		writer.write(customer.toString()); //write to file first line
         	}
         	else {
-        		writer.write("\n"+customer.toString());	
+        		writer.write("\n"+customer.toString());	//write to file
         	}
 			writer.close();
 			reader.close();
@@ -220,6 +228,91 @@ public class RentalSystem {
 			
 			e.printStackTrace();
 		}
-		
     }
+    public static void loadData() {
+    	try {
+    		String line ="";
+    		int i;
+			BufferedReader reader = new BufferedReader(new FileReader("vehicles.txt"));
+			try {
+				while((line = reader.readLine()) != null) {
+					
+					String[] parts = line.split(" ");
+					
+					Vehicle vehicle;
+					if(parts[0].equals("Pickup")) { //account for pickup in first line
+						i = 1;
+					}
+					else {
+						i=0;
+					}
+						String type = parts[0+i];
+						String plate = parts[2+i];
+						String make = parts[4+i];
+						String model = parts[6+i];
+					
+					int year = Integer.parseInt(parts[8+i]);
+					//String status = parts[10+i];
+					if(type.equals("Car")) {
+						int seats =Integer.parseInt(parts[13]);
+						vehicle = new Car(make, model, year, seats);
+					}
+					else if(type.equals("Minibus")) {
+						boolean isAccessible =Boolean.parseBoolean(parts[13]);
+						vehicle = new Minibus(make, model, year, isAccessible);
+					}
+					else if(type.equals("Truck")) {
+						double cargoSize =Double.parseDouble(parts[15]);
+						boolean hasTrailer =Boolean.parseBoolean(parts[19]);
+						vehicle = new PickupTruck(make, model, year, cargoSize, hasTrailer);
+					}
+					else {
+						System.out.println("error in determining vehicle type");
+						vehicle = null;
+					}
+					if (vehicle != null){
+	                    vehicle.setLicensePlate(plate);
+	                    instance.vehicles.add(vehicle);
+                    }
+					
+				}
+				reader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			BufferedReader reader2 = new BufferedReader(new FileReader("customers.txt"));
+			try {
+				while((line = reader2.readLine()) != null) {
+					String[] cust = line.split(" ");
+					
+					int cid = Integer.parseInt(cust[2]);
+					String cname = cust[5];
+					instance.customers.add(new Customer(cid, cname));
+				}
+				reader2.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			BufferedReader reader3 = new BufferedReader(new FileReader("rental_records.txt"));
+			try {
+				while((line = reader3.readLine()) != null) {
+					String[] rec = line.split(" ");
+					Vehicle vehicle = instance.findVehicleByPlate(rec[3]);
+					if(instance.findCustomerByName(rec[6]) == null) {
+						System.out.println("error loading customer: "+rec[6]+" dosn't exist");
+					}
+					Customer customer = instance.findCustomerByName(rec[6]);
+					LocalDate date = LocalDate.parse(rec[9]);
+					double amount = Double.parseDouble(rec[12].replace("$", ""));
+					String recordType = rec[0];
+					instance.rentalHistory.addRecord(new RentalRecord(vehicle, customer, date, amount, recordType));
+				}
+				reader3.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
 }
