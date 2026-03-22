@@ -176,10 +176,10 @@ public class RentalSystem {
                 vehicleType = "Pickup Truck";
             } else {
                 vehicleType = "Unknown";
-                System.out.println("error: unable to get vehicle type when saving vehicle to file: vehicle type dose not exist or is not reconsised");
+                System.out.println("Error: Unable to determine vehicle type when saving vehicle to file: Vehicle type does not exist or is not recognised");
             }
             if(vehicleType.equals("Unknown")){
-            	System.out.println("vehicle skiped");
+            	System.out.println("Vehicle skipped");
             }
             else {
             	if(reader.readLine() == null) {
@@ -267,7 +267,7 @@ public class RentalSystem {
 						vehicle = new PickupTruck(make, model, year, cargoSize, hasTrailer);
 					}
 					else {
-						System.out.println("error in determining vehicle type");
+						System.out.println("Error in determining vehicle type while loading vehicle with plate " + parts[2+i]);
 						vehicle = null;
 					}
 					if (vehicle != null){
@@ -299,7 +299,7 @@ public class RentalSystem {
 					String[] rec = line.split(" ");
 					Vehicle vehicle = instance.findVehicleByPlate(rec[3]);
 					if(instance.findCustomerByName(rec[6]) == null) {
-						System.out.println("error loading customer: "+rec[6]+" dosn't exist");
+						System.out.println("Error loading customers: "+rec[6]+" doesn't exist");
 					}
 					Customer customer = instance.findCustomerByName(rec[6]);
 					LocalDate date = LocalDate.parse(rec[9]);
