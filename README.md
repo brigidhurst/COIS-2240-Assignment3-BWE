@@ -5,8 +5,8 @@
 - 2.1
 ## Brigid: 
 - 1.5 (DONE)
-- 1.6 (AWAITING 1.4)
-- 2.2
+- 1.6 (DONE)
+- 2.2 (DONE)
 ## Will: 
 - 1.1 (DONE)
 - 1.4 (DONE)
