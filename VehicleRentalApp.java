@@ -26,7 +26,12 @@ public class VehicleRentalApp {
                     scanner.nextLine();
 
                     System.out.print("Enter license plate: ");
-                    String plate = scanner.nextLine().toUpperCase();
+                    String plate = null;
+                    	try {
+                    	plate = scanner.nextLine().toUpperCase();
+                    	}catch(IllegalArgumentException e){
+                    		e.printStackTrace();
+                    	}
                     System.out.print("Enter make: ");
                     String make = scanner.nextLine();
                     System.out.print("Enter model: ");

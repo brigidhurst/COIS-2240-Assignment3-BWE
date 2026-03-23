@@ -28,7 +28,12 @@ public abstract class Vehicle {
     }
 
     public void setLicensePlate(String plate) {
-        this.licensePlate = plate == null ? null : plate.toUpperCase();
+    	if(isValidPlate(plate) == true) {
+    		this.licensePlate = plate == null ? null : plate.toUpperCase();
+    	}
+    	else {
+    		throw new IllegalArgumentException("Error: Licence plate is empty, does not exist, or is invalid");
+    	}
     }
 
     public void setStatus(VehicleStatus status) {
@@ -51,5 +56,27 @@ public abstract class Vehicle {
 
     private String capitalize(String input) {
     	return input.substring(0,1).toUpperCase() + input.substring(1).toLowerCase();
+    }
+    private boolean isValidPlate(String plate) {
+    	if(plate == null || plate.equals("")){
+    		
+    		return false;
+    	}
+    	else if(plate.length() == 6) {
+    		for(int i = 0; i < plate.length(); i++) {
+    			if(i <= 2 && !Character.isLetter(plate.charAt(i))) {
+    				
+    				return false;
+    			}
+    			else if(i > 2 && !Character.isDigit(plate.charAt(i))) {
+    				
+    				return false;
+    			}
+    		}
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
     }
 }
