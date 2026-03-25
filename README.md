@@ -13,4 +13,4 @@
   - on fail still says "x added successfully" before failure message
   - fix by adding checking in APP for same plates before asigning and outputing sucsess message
   - similar fix for customer as well
-- 2.3
+- 2.3 (DONE)
