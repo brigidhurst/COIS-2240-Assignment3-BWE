@@ -2,7 +2,7 @@
 ## Eric: 
 - 1.2 (DONE)
 - 1.3 (DONE)
-- 2.1
+- 2.1 (DONE)
 ## Brigid: 
 - 1.5 (DONE)
 - 1.6 (DONE)

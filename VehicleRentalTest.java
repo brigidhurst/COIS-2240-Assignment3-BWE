@@ -42,8 +42,8 @@ class VehicleRentalTest {
 		
 		assertThrows(IllegalArgumentException.class,()->{bus0.setLicensePlate("");});
 		assertThrows(IllegalArgumentException.class,()->{bus1.setLicensePlate(null);});
-		assertThrows(IllegalArgumentException.class,()->{bus0.setLicensePlate("AAA1000");});
-		assertThrows(IllegalArgumentException.class,()->{bus0.setLicensePlate("ZZZ99");});
+		assertThrows(IllegalArgumentException.class,()->{bus2.setLicensePlate("AAA1000");});
+		assertThrows(IllegalArgumentException.class,()->{truck0.setLicensePlate("ZZZ99");});
 	}
 	
 	@Test
