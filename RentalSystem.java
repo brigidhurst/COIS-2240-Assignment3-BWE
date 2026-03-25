@@ -217,14 +217,19 @@ public class RentalSystem {
 		}
     }
     public void saveRecord(RentalRecord record) {
+    	String recd = record.toString();
+    	String plate;
+    	String type;
+    	String lineTest;
+    	int index = 0;
     	try {
 			BufferedWriter writer = new BufferedWriter(new FileWriter("rental_records.txt", true));
 			BufferedReader reader = new BufferedReader(new FileReader("rental_records.txt"));
 			if(reader.readLine() == null) {
-        		writer.write(record.toString());
+        		writer.write(recd);
         	}
         	else {
-        		writer.write("\n"+record.toString());	
+        		writer.write("\n"+recd);	
         	}
 			writer.close();
 			reader.close();
@@ -232,6 +237,60 @@ public class RentalSystem {
 			
 			e.printStackTrace();
 		}
+    	try {
+			BufferedReader reader = new BufferedReader(new FileReader("vehicles.txt"));
+			ArrayList<String> lines = new ArrayList<>();
+			do {
+				lineTest = reader.readLine();
+				lines.add(lineTest);
+			} while( lineTest != null);
+			lines.remove(null);
+			
+			String[] parts = recd.split(" ");
+			plate = parts[3];
+			type = parts[0];
+			for(String str: lines) {
+				String[] line = str.split(" ");
+				int i = 0;
+				if(line[0].equals("Pickup")) {
+					i++;
+				}
+				if(line[2+i].equals(plate)) {
+					if(type.equals("RENT")) {
+						line[10+i] = "Rented";
+						str = String.join(" ", line);
+						lines.set(index, str);
+						break;
+					}
+					else if(type.equals("RETURN")) {
+						line[10+i] = "Available";
+						str = String.join(" ", line);
+						lines.set(index, str);
+						break;
+					}
+					else {
+						System.out.println("Error: unable to get interaction");
+					}
+				}
+				
+				index++;
+			}
+			BufferedWriter writer = new BufferedWriter(new FileWriter("vehicles.txt"));
+			writer.write(lines.get(0));
+				for(index = 1; index <= lines.size()-1 ;index++) {
+					writer.write("\n"+lines.get(index));
+				}
+			reader.close();
+			writer.close();
+				
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	
     }
     public static void loadData() {
     	try {
@@ -256,7 +315,7 @@ public class RentalSystem {
 						String model = parts[6+i];
 					
 					int year = Integer.parseInt(parts[8+i]);
-					//String status = parts[10+i];
+					String status = parts[10+i];
 					if(type.equals("Car")) {
 						int seats =Integer.parseInt(parts[13]);
 						vehicle = new Car(make, model, year, seats);
@@ -276,6 +335,15 @@ public class RentalSystem {
 					}
 					if (vehicle != null){
 	                    vehicle.setLicensePlate(plate);
+	                    if(status.equals("Rented")) {
+	                    	vehicle.setStatus(Vehicle.VehicleStatus.Rented);
+	                    }
+	                    else if(status.equals("Available")) {
+	                    	vehicle.setStatus(Vehicle.VehicleStatus.Available);
+	                    }
+	                    else {
+	                    	System.out.println("Error: unable to get vehicle status");
+	                    }
 	                    instance.vehicles.add(vehicle);
                     }
 					
