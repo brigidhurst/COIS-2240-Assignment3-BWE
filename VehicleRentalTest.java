@@ -4,6 +4,9 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+
 class VehicleRentalTest {
 
 	@Test
@@ -41,5 +44,13 @@ class VehicleRentalTest {
 		assertThrows(IllegalArgumentException.class,()->{bus1.setLicensePlate(null);});
 		assertThrows(IllegalArgumentException.class,()->{bus0.setLicensePlate("AAA1000");});
 		assertThrows(IllegalArgumentException.class,()->{bus0.setLicensePlate("ZZZ99");});
+	}
+	
+	@Test
+	void testSingletonRentalSystem() throws Exception {
+		Constructor<RentalSystem> constructor = RentalSystem.class.getDeclaredConstructor();
+		assertTrue(constructor.getModifiers() == Modifier.PRIVATE);
+		
+		assertNotNull(RentalSystem.getInstance());
 	}
 }
