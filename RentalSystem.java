@@ -23,6 +23,14 @@ public class RentalSystem {
     		loadData();
     	return instance;
     }
+    
+    public RentalHistory getRentalHistory() {
+        return rentalHistory;
+    }
+    
+    public List<Vehicle> getVehicles() {
+    	return vehicles;
+    }
 
     public boolean addVehicle(Vehicle vehicle) {
     	if (findVehicleByPlate(vehicle.getLicensePlate()) == null) {
