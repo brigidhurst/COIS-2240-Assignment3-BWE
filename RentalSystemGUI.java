@@ -233,7 +233,7 @@ public class RentalSystemGUI extends Application {
         			vehicle = new SportCar(make, model, year, seats, horsepower, hasTurbo);
         			break;
         		default:
-        			vehicleAddMessageLabel.setText("You should not be seeing this, like realy idk how you got this");
+        			vehicleAddMessageLabel.setText("You should not be seeing this, like really idk how you got this");
         			vehicle = null;
                 	break;
         	}
@@ -297,7 +297,7 @@ public class RentalSystemGUI extends Application {
         manageTabgrid.add(availableVehiclesPane, 0, 1, 1, 4);
 
         manageTabgrid.add(rentedVehiclesLabel, 0, 5);
-        manageTabgrid.add(rentedVehiclesPane, 0, 6, 1, 4);
+        manageTabgrid.add(rentedVehiclesPane, 0, 6, 1, 5);
         
         Label rentVehicleLabel = new Label("Rent Vehicle");
         Label rentPlateLabel = new Label("License Plate:");
@@ -410,7 +410,7 @@ public class RentalSystemGUI extends Application {
             }
             
             if (!Vehicle.isValidPlate(plate)) {
-            	returnVehicleMessageLabel.setText("Invalid Licence plate");
+            	returnVehicleMessageLabel.setText("Invalid licence plate");
             	return;
             }
             if (!iDStr.matches("\\d+")) {
