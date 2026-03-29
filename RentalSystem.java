@@ -31,6 +31,10 @@ public class RentalSystem {
     public List<Vehicle> getVehicles() {
     	return vehicles;
     }
+    
+    public List<Customer> getCustomers() {
+    	return customers;
+    }
 
     public boolean addVehicle(Vehicle vehicle) {
     	if (findVehicleByPlate(vehicle.getLicensePlate()) == null) {

@@ -54,6 +54,19 @@ public class RentalSystemGUI extends Application {
         ComboBox<String> vehicleTypeDropdown = new ComboBox<>();
         vehicleTypeDropdown.getItems().addAll("Choose a Value", "Car", "Minibus", "Pickup Truck", "Sport Car");
         vehicleTypeDropdown.setValue("Choose a Value");
+        
+        ComboBox<String> rentCustomerDropdown = new ComboBox<>();
+        rentCustomerDropdown.getItems().add("Choose a Customer");
+        for (Customer i : rentalSystem.getCustomers()) {
+        	rentCustomerDropdown.getItems().add(i.getCustomerId() + " (" + i.getCustomerName() + ")");
+        }
+        rentCustomerDropdown.setValue("Choose a Customer");
+        ComboBox<String> returnCustomerDropdown = new ComboBox<>();
+        returnCustomerDropdown.getItems().add("Choose a Customer");
+        for (Customer i : rentalSystem.getCustomers()) {
+        	returnCustomerDropdown.getItems().add(i.getCustomerId() + " (" + i.getCustomerName() + ")");
+        }
+        returnCustomerDropdown.setValue("Choose a Customer");
 
         TextField vehiclePlateField = new TextField();
         TextField vehicleMakeField = new TextField();
@@ -269,6 +282,8 @@ public class RentalSystemGUI extends Application {
             
         	if (rentalSystem.addCustomer(new Customer(customerID, customerName))) {
         		vehicleCustomerMessageLabel.setText("Customer added successfully");
+        		rentCustomerDropdown.getItems().add(customerIDStr + " (" + customerName + ")");
+        		returnCustomerDropdown.getItems().add(customerIDStr + " (" + customerName + ")");
         		availableVehiclesPane.setContent(new TextArea(getVehicleLogs(Vehicle.VehicleStatus.Available)));
             	rentedVehiclesPane.setContent(new TextArea(getVehicleLogs(Vehicle.VehicleStatus.Rented)));
             	rentalHistoryPane.setContent(new TextArea(getRentalLogs()));
@@ -312,13 +327,12 @@ public class RentalSystemGUI extends Application {
         
         TextField rentPlateField = new TextField();
         TextField rentalAmountField = new TextField();
-        TextField rentCustomerField = new TextField();
         
         Button rentVehicleButton = new Button("Rent Vehicle");
         Label rentVehicleMessageLabel = new Label();
         
         TextField returnPlateField = new TextField();
-        TextField returnCustomerField = new TextField();
+        
         TextField returnFeesField = new TextField();
         
         Button returnVehicleButton = new Button("Return Vehicle");
@@ -334,7 +348,7 @@ public class RentalSystemGUI extends Application {
         manageTabgrid.add(rentalAmountField, 3, 2);
         
         manageTabgrid.add(rentCustomerLabel, 2, 3);
-        manageTabgrid.add(rentCustomerField, 3, 3);
+        manageTabgrid.add(rentCustomerDropdown, 3, 3);
         
         manageTabgrid.add(rentVehicleButton, 3, 4);
         manageTabgrid.add(rentVehicleMessageLabel, 3, 5);
@@ -345,7 +359,7 @@ public class RentalSystemGUI extends Application {
         manageTabgrid.add(returnPlateField, 3, 7);
         
         manageTabgrid.add(returnCustomerLabel, 2, 8);
-        manageTabgrid.add(returnCustomerField, 3, 8);
+        manageTabgrid.add(returnCustomerDropdown, 3, 8);
         
         manageTabgrid.add(returnFeesLabel, 2, 9);
         manageTabgrid.add(returnFeesField, 3, 9);
@@ -356,15 +370,15 @@ public class RentalSystemGUI extends Application {
         rentVehicleButton.setOnAction(e -> {
         	String plate = rentPlateField.getText().toUpperCase();
             String priceStr = rentalAmountField.getText();
-            String iDStr = rentCustomerField.getText();
+            String iDStr = rentCustomerDropdown.getValue().split(" \\(")[0];
             
-            if (plate.isEmpty() || priceStr.isEmpty() || iDStr.isEmpty()) {
+            if (plate.isEmpty() || priceStr.isEmpty() || iDStr.equals("Choose a Customer")) {
             	rentVehicleMessageLabel.setText("Please set all values");
             	return;
             }
             
             if (!Vehicle.isValidPlate(plate)) {
-            	rentVehicleMessageLabel.setText("Invalid Licence plate");
+            	rentVehicleMessageLabel.setText("Invalid licence plate");
             	return;
             }
             if (!priceStr.matches("\\d+(\\.\\d+)?")) {
@@ -401,10 +415,10 @@ public class RentalSystemGUI extends Application {
         
         returnVehicleButton.setOnAction(e -> {
         	String plate = returnPlateField.getText();
-        	String iDStr = returnCustomerField.getText();
+        	String iDStr = returnCustomerDropdown.getValue().split(" \\(")[0];
             String feesStr = returnFeesField.getText();
             
-            if (plate.isEmpty() || iDStr.isEmpty() || feesStr.isEmpty()) {
+            if (plate.isEmpty() || iDStr.equals("Choose a Customer") || feesStr.isEmpty()) {
             	returnVehicleMessageLabel.setText("Please set all values");
             	return;
             }
@@ -459,7 +473,7 @@ public class RentalSystemGUI extends Application {
         tabPane.getTabs().addAll(addTab, manageTab, historyTab);
 
         // Scene
-        Scene scene = new Scene(tabPane, 500, 350);
+        Scene scene = new Scene(tabPane, 800, 500);
         primaryStage.setTitle("Rental System");
         primaryStage.setScene(scene);
         primaryStage.show();
