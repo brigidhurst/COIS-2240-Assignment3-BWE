@@ -57,7 +57,7 @@ public abstract class Vehicle {
     private String capitalize(String input) {
     	return input.substring(0,1).toUpperCase() + input.substring(1).toLowerCase();
     }
-    private boolean isValidPlate(String plate) {
+    public static boolean isValidPlate(String plate) {
     	if(plate == null || plate.equals("")){
     		
     		return false;
